@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Мої результати{% endblock %}
+{% block content %}
+<h1>Мої результати</h1>
+{% if attempts %}
+<table>
+  <tr><th>Тест</th><th>Бали</th><th>Дата (UTC)</th><th></th></tr>
+  {% for a in attempts %}
+  <tr>
+    <td>{{ a.title }}</td>
+    <td>{{ a.score }} / {{ a.total }}</td>
+    <td>{{ a.created_at }}</td>
+    <td><a href="{{ url_for('result', attempt_id=a.id) }}">Деталі</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="muted">Ви ще не проходили тестів. <a href="{{ url_for('index') }}">Обрати тест</a></p>
+{% endif %}
+{% endblock %}

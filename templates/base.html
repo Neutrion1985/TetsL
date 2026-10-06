@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}TetsL{% endblock %} — TetsL</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <nav>
+    <a class="brand" href="{{ url_for('index') }}">TetsL</a>
+    <div class="links">
+      {% if g.user %}
+        <a href="{{ url_for('my_results') }}">Мої результати</a>
+        {% if g.user.is_admin %}<a href="{{ url_for('new_test') }}">+ Новий тест</a>{% endif %}
+        <span class="user">{{ g.user.username }}</span>
+        <form method="post" action="{{ url_for('logout') }}" class="inline">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <button class="link">Вийти</button>
+        </form>
+      {% else %}
+        <a href="{{ url_for('login') }}">Увійти</a>
+        <a href="{{ url_for('register') }}">Реєстрація</a>
+      {% endif %}
+    </div>
+  </nav>
+</header>
+<main>
+  {% for msg in get_flashed_messages() %}<div class="flash">{{ msg }}</div>{% endfor %}
+  {% block content %}{% endblock %}
+</main>
+</body>
+</html>

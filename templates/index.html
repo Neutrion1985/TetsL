@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Тести{% endblock %}
+{% block content %}
+<h1>Доступні тести</h1>
+{% if not g.user %}<p class="muted">Зареєструйтеся або увійдіть, щоб проходити тести.</p>{% endif %}
+{% for t in tests %}
+  <div class="card">
+    <h2>{{ t.title }}</h2>
+    {% if t.description %}<p>{{ t.description }}</p>{% endif %}
+    <p class="muted">Питань: {{ t.qcount }}</p>
+    <div class="row">
+      {% if t.qcount %}<a class="button" href="{{ url_for('take_test', test_id=t.id) }}">Пройти тест</a>{% endif %}
+      {% if g.user and g.user.is_admin %}<a class="button secondary" href="{{ url_for('edit_test', test_id=t.id) }}">Редагувати</a>{% endif %}
+    </div>
+  </div>
+{% else %}
+  <p class="muted">Тестів поки немає.</p>
+{% endfor %}
+{% endblock %}

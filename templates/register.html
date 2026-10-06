@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Реєстрація{% endblock %}
+{% block content %}
+<h1>Реєстрація</h1>
+<form method="post" class="card form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <label>Логін <input name="username" required minlength="3" maxlength="32" value="{{ request.form.username }}"></label>
+  <label>Пароль <input type="password" name="password" required minlength="6"></label>
+  <label>Повторіть пароль <input type="password" name="password2" required minlength="6"></label>
+  <button>Зареєструватися</button>
+  <p class="muted">Вже маєте акаунт? <a href="{{ url_for('login') }}">Увійти</a></p>
+</form>
+{% endblock %}

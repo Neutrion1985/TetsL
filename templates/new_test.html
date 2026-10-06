@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Новий тест{% endblock %}
+{% block content %}
+<h1>Новий тест</h1>
+<form method="post" class="card form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <label>Назва <input name="title" required maxlength="200"></label>
+  <label>Опис <textarea name="description" rows="3"></textarea></label>
+  <button>Створити і додати питання</button>
+</form>
+{% endblock %}

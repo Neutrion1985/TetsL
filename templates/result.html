@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Результат{% endblock %}
+{% block content %}
+<h1>Результат: {{ test.title }}</h1>
+<div class="card score">
+  <strong>{{ attempt.score }} / {{ attempt.total }}</strong>
+  ({{ (100 * attempt.score / attempt.total) | round | int }}%)
+  <span class="muted">— {{ attempt.username }}, {{ attempt.created_at }} UTC</span>
+</div>
+{% for item in questions %}
+  {% set picked = chosen.get(item.q.id) %}
+  <div class="card">
+    <h3>{{ loop.index }}. {{ item.q.text }}</h3>
+    <ul class="answers">
+    {% for o in item.options %}
+      <li class="{% if o.is_correct %}correct{% elif o.id == picked %}wrong{% endif %}">
+        {{ o.text }}{% if o.id == picked %} ← ваша відповідь{% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+    {% if item.q.id not in chosen %}<p class="muted">Питання додано після проходження.</p>{% endif %}
+  </div>
+{% endfor %}
+<div class="row">
+  <a class="button" href="{{ url_for('take_test', test_id=test.id) }}">Пройти ще раз</a>
+  <a class="button secondary" href="{{ url_for('index') }}">До тестів</a>
+</div>
+{% endblock %}

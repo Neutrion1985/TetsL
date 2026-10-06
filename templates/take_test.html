@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}{{ test.title }}{% endblock %}
+{% block content %}
+<h1>{{ test.title }}</h1>
+{% if test.description %}<p>{{ test.description }}</p>{% endif %}
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  {% for item in questions %}
+    <fieldset class="card">
+      <legend>{{ loop.index }}. {{ item.q.text }}</legend>
+      {% for o in item.options %}
+        <label class="option"><input type="radio" name="q{{ item.q.id }}" value="{{ o.id }}" required> {{ o.text }}</label>
+      {% endfor %}
+    </fieldset>
+  {% endfor %}
+  <button>Завершити тест</button>
+</form>
+{% endblock %}

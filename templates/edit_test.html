@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Редагування: {{ test.title }}{% endblock %}
+{% block content %}
+<h1>{{ test.title }}</h1>
+{% if test.description %}<p>{{ test.description }}</p>{% endif %}
+
+<h2>Питання ({{ questions|length }})</h2>
+{% for item in questions %}
+  <div class="card">
+    <div class="row between">
+      <h3>{{ loop.index }}. {{ item.q.text }}</h3>
+      <form method="post" action="{{ url_for('delete_question', question_id=item.q.id) }}" onsubmit="return confirm('Видалити питання?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <button class="danger small">Видалити</button>
+      </form>
+    </div>
+    <ul class="answers">
+      {% for o in item.options %}<li class="{% if o.is_correct %}correct{% endif %}">{{ o.text }}</li>{% endfor %}
+    </ul>
+  </div>
+{% else %}
+  <p class="muted">Питань ще немає.</p>
+{% endfor %}
+
+<h2>Додати питання</h2>
+<form method="post" class="card form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <label>Текст питання <textarea name="text" rows="2" required></textarea></label>
+  <p class="muted">Заповніть від 2 до 6 варіантів і позначте правильний.</p>
+  {% for i in range(6) %}
+    <div class="opt-row">
+      <input type="radio" name="correct" value="{{ i }}" {% if i == 0 %}required{% endif %} title="Правильна відповідь">
+      <input name="opt{{ i }}" placeholder="Варіант {{ i + 1 }}">
+    </div>
+  {% endfor %}
+  <button>Додати питання</button>
+</form>
+
+<h2>Результати користувачів</h2>
+{% if attempts %}
+<table>
+  <tr><th>Користувач</th><th>Бали</th><th>Дата (UTC)</th><th></th></tr>
+  {% for a in attempts %}
+  <tr><td>{{ a.username }}</td><td>{{ a.score }} / {{ a.total }}</td><td>{{ a.created_at }}</td>
+      <td><a href="{{ url_for('result', attempt_id=a.id) }}">Деталі</a></td></tr>
+  {% endfor %}
+</table>
+{% else %}<p class="muted">Ще ніхто не проходив цей тест.</p>{% endif %}
+
+<form method="post" action="{{ url_for('delete_test', test_id=test.id) }}" onsubmit="return confirm('Видалити тест разом з усіма результатами?')">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <button class="danger">Видалити тест</button>
+</form>
+{% endblock %}
