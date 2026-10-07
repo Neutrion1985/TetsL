@@ -18,6 +18,7 @@
       </li>
     {% endfor %}
     </ul>
+    {% if item.q.ref %}<p class="muted">Де в тексті: {{ item.q.ref }}</p>{% endif %}
     {% if item.q.id not in chosen %}<p class="muted">Питання додано після проходження.</p>{% endif %}
   </div>
 {% endfor %}

@@ -1,5 +1,8 @@
 """TetsL — сайт для проходження тестів з реєстрацією користувачів."""
+import glob
+import hashlib
 import os
+import re
 import secrets
 import sqlite3
 from functools import wraps
@@ -69,18 +72,6 @@ CREATE TABLE IF NOT EXISTS answers (
 );
 """
 
-SAMPLE_TEST = {
-    "title": "Загальні знання",
-    "description": "Невеликий демонстраційний тест.",
-    "questions": [
-        ("Столиця України?", ["Львів", "Київ", "Харків", "Одеса"], 1),
-        ("Скільки буде 7 × 8?", ["54", "56", "64", "48"], 1),
-        ("Яка планета найближча до Сонця?", ["Венера", "Марс", "Меркурій", "Земля"], 2),
-        ("Яка мова використовується для стилізації вебсторінок?", ["HTML", "Python", "SQL", "CSS"], 3),
-    ],
-}
-
-
 # ---------- База даних ----------
 
 def get_db():
@@ -101,9 +92,81 @@ def close_db(_exc):
 def init_db():
     db = get_db()
     db.executescript(SCHEMA)
-    if db.execute("SELECT COUNT(*) FROM tests").fetchone()[0] == 0:
-        create_test(db, SAMPLE_TEST["title"], SAMPLE_TEST["description"], SAMPLE_TEST["questions"])
+    # Міграції для баз, створених попередньою версією.
+    test_cols = {r["name"] for r in db.execute("PRAGMA table_info(tests)")}
+    if "source" not in test_cols:
+        db.execute("ALTER TABLE tests ADD COLUMN source TEXT")
+        db.execute("ALTER TABLE tests ADD COLUMN source_hash TEXT")
+    if "ref" not in {r["name"] for r in db.execute("PRAGMA table_info(questions)")}:
+        db.execute("ALTER TABLE questions ADD COLUMN ref TEXT NOT NULL DEFAULT ''")
+    import_test_files(db)
     db.commit()
+
+
+# ---------- Імпорт тестів з папки tests/ ----------
+
+LETTERS = "АБВГДЕ"
+
+
+def parse_test_file(content):
+    """Розбирає markdown-файл тесту (формат див. tests/*.md)."""
+    title_m = re.search(r"^#\s+(.+)$", content, re.M)
+    if not title_m:
+        raise ValueError("немає заголовка '# ...'")
+    source_m = re.search(r"^Джерело:\s*(.+)$", content, re.M)
+    body, _, answers_part = content.partition("\n---")
+    answers = {int(n): (letter, ref.strip()) for n, letter, ref in
+               re.findall(r"^\|\s*(\d+)\s*\|\s*([А-Е])\s*\|\s*(.*?)\s*\|\s*$", answers_part, re.M)}
+    questions, current = [], None
+    for line in body.splitlines():
+        q = re.match(r"^\s*(\d+)\.\s+(.+)$", line)
+        o = re.match(r"^\s*([А-Е])\)\s+(.+)$", line)
+        if q:
+            current = {"num": int(q.group(1)), "text": q.group(2).strip(), "options": []}
+            questions.append(current)
+        elif o and current is not None:
+            current["options"].append((o.group(1), o.group(2).strip()))
+    if not questions:
+        raise ValueError("не знайдено жодного питання")
+    result = []
+    for q in questions:
+        if q["num"] not in answers:
+            raise ValueError(f"немає відповіді на питання {q['num']}")
+        letter, ref = answers[q["num"]]
+        letters = [l for l, _ in q["options"]]
+        if len(letters) < 2 or letter not in letters:
+            raise ValueError(f"питання {q['num']}: некоректні варіанти або відповідь")
+        result.append((q["text"], [t for _, t in q["options"]], letters.index(letter), ref))
+    return title_m.group(1).strip(), (source_m.group(1).strip() if source_m else ""), result
+
+
+def import_test_files(db, folder=None):
+    """Додає нові та оновлює змінені тести з tests/*.md. Результати проходжень зберігаються."""
+    folder = folder or os.path.join(BASE_DIR, "tests")
+    for path in sorted(glob.glob(os.path.join(folder, "*.md"))):
+        name = os.path.basename(path)
+        with open(path, encoding="utf-8") as f:
+            content = f.read()
+        digest = hashlib.sha256(content.encode()).hexdigest()
+        existing = db.execute("SELECT id, source_hash FROM tests WHERE source = ?", (name,)).fetchone()
+        if existing and existing["source_hash"] == digest:
+            continue
+        try:
+            title, description, questions = parse_test_file(content)
+        except ValueError as e:
+            app.logger.error("Тест %s не імпортовано: %s", name, e)
+            continue
+        if existing:
+            test_id = existing["id"]
+            db.execute("UPDATE tests SET title = ?, description = ?, source_hash = ? WHERE id = ?",
+                       (title, description, digest, test_id))
+            db.execute("DELETE FROM questions WHERE test_id = ?", (test_id,))
+        else:
+            test_id = db.execute(
+                "INSERT INTO tests (title, description, source, source_hash) VALUES (?, ?, ?, ?)",
+                (title, description, name, digest)).lastrowid
+        for text, opts, correct, ref in questions:
+            add_question(db, test_id, text, opts, correct, ref)
 
 
 def create_test(db, title, description, questions):
@@ -114,9 +177,9 @@ def create_test(db, title, description, questions):
     return test_id
 
 
-def add_question(db, test_id, text, opts, correct):
-    qid = db.execute("INSERT INTO questions (test_id, text) VALUES (?, ?)",
-                     (test_id, text)).lastrowid
+def add_question(db, test_id, text, opts, correct, ref=""):
+    qid = db.execute("INSERT INTO questions (test_id, text, ref) VALUES (?, ?, ?)",
+                     (test_id, text, ref)).lastrowid
     for i, opt in enumerate(opts):
         db.execute("INSERT INTO options (question_id, text, is_correct) VALUES (?, ?, ?)",
                    (qid, opt, int(i == correct)))
@@ -227,7 +290,7 @@ def index():
     tests = get_db().execute("""
         SELECT t.*, COUNT(q.id) AS qcount FROM tests t
         LEFT JOIN questions q ON q.test_id = t.id
-        GROUP BY t.id ORDER BY t.id DESC""").fetchall()
+        GROUP BY t.id ORDER BY t.id""").fetchall()
     return render_template("index.html", tests=tests)
 
 
