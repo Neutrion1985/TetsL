@@ -43,3 +43,17 @@ th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--border
 .badge.ok { background:var(--ok); color:#fff; }
 .badge.partial { background:var(--accent); color:#fff; }
 .card.done { border-left:4px solid var(--ok); }
+.progress { margin-bottom:14px; }
+.progress-text { color:var(--muted); margin-bottom:6px; }
+.progress-bar { height:8px; background:var(--border); border-radius:999px; overflow:hidden; }
+.progress-bar div { height:100%; width:0; background:var(--accent); transition:width .2s; }
+.question .option { display:flex; gap:10px; align-items:flex-start; border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin:8px 0; }
+.question .option:has(input:checked) { border-color:var(--accent); background:color-mix(in srgb, var(--accent) 10%, transparent); }
+.question .option input { margin-top:4px; }
+.letter { font-weight:700; color:var(--accent); min-width:1.2em; }
+.nav { margin-top:6px; }
+.secondary-btn { background:transparent; color:var(--accent); border:1px solid var(--accent); }
+button:disabled { opacity:.45; cursor:not-allowed; }
+[hidden] { display:none !important; }
+.question legend { float:left; width:100%; padding:0; margin-bottom:6px; font-size:1.05rem; }
+.question legend + * { clear:both; }

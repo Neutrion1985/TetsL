@@ -2,17 +2,57 @@
 {% block title %}{{ test.title }}{% endblock %}
 {% block content %}
 <h1>{{ test.title }}</h1>
-{% if test.description %}<p>{{ test.description }}</p>{% endif %}
-<form method="post">
+{% if test.description %}<p class="muted">{{ test.description }}</p>{% endif %}
+<form method="post" id="quiz">
   <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <div class="progress" hidden>
+    <div class="progress-text">Питання <span id="cur">1</span> з {{ questions|length }}</div>
+    <div class="progress-bar"><div id="bar"></div></div>
+  </div>
   {% for item in questions %}
-    <fieldset class="card">
+    <fieldset class="card question">
       <legend>{{ loop.index }}. {{ item.q.text }}</legend>
       {% for o in item.options %}
-        <label class="option"><input type="radio" name="q{{ item.q.id }}" value="{{ o.id }}" required> {{ o.text }}</label>
+        <label class="option"><input type="radio" name="q{{ item.q.id }}" value="{{ o.id }}" required>
+          <span class="letter">{{ "АБВГДЕ"[loop.index0] }}</span> <span>{{ o.text }}</span></label>
       {% endfor %}
     </fieldset>
   {% endfor %}
-  <button>Завершити тест</button>
+  <div class="row between nav">
+    <button type="button" class="secondary-btn" id="prev" hidden>← Назад</button>
+    <button type="button" id="next" hidden disabled>Далі →</button>
+    <button id="finish">Завершити тест</button>
+  </div>
 </form>
+<script>
+// Покроковий режим: одне питання на екрані, наступне — лише після вибору відповіді.
+// Без JavaScript форма працює як звичайна (усі питання на одній сторінці).
+(function () {
+  const qs = Array.from(document.querySelectorAll(".question"));
+  const prev = document.getElementById("prev"), next = document.getElementById("next"),
+        finish = document.getElementById("finish"), bar = document.getElementById("bar"),
+        cur = document.getElementById("cur");
+  let i = 0;
+  document.querySelector(".progress").hidden = false;
+  const answered = q => !!q.querySelector("input:checked");
+  function show() {
+    qs.forEach((q, k) => q.hidden = k !== i);
+    cur.textContent = i + 1;
+    bar.style.width = (100 * (i + 1) / qs.length) + "%";
+    prev.hidden = i === 0;
+    const last = i === qs.length - 1;
+    next.hidden = last;
+    finish.hidden = !last;
+    next.disabled = !answered(qs[i]);
+    finish.disabled = !answered(qs[i]);
+    window.scrollTo({top: 0});
+  }
+  qs.forEach(q => q.addEventListener("change", () => {
+    next.disabled = false; finish.disabled = false;
+  }));
+  next.addEventListener("click", () => { if (answered(qs[i])) { i++; show(); } });
+  prev.addEventListener("click", () => { if (i > 0) { i--; show(); } });
+  show();
+})();
+</script>
 {% endblock %}
