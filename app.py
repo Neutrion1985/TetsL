@@ -291,7 +291,21 @@ def index():
         SELECT t.*, COUNT(q.id) AS qcount FROM tests t
         LEFT JOIN questions q ON q.test_id = t.id
         GROUP BY t.id ORDER BY t.id""").fetchall()
-    return render_template("index.html", tests=tests)
+    stats = {}
+    if g.user:
+        # Статистика спроб поточного користувача: кількість, найкращий і останній результат.
+        for r in get_db().execute("""
+            SELECT a.test_id, COUNT(*) AS cnt, MAX(a.score * 1.0 / a.total) AS best_ratio,
+                   (SELECT score || '/' || total FROM attempts l
+                    WHERE l.test_id = a.test_id AND l.user_id = a.user_id
+                    ORDER BY l.id DESC LIMIT 1) AS last,
+                   (SELECT id FROM attempts l
+                    WHERE l.test_id = a.test_id AND l.user_id = a.user_id
+                    ORDER BY l.id DESC LIMIT 1) AS last_id
+            FROM attempts a WHERE a.user_id = ? GROUP BY a.test_id""", (g.user["id"],)):
+            stats[r["test_id"]] = {"count": r["cnt"], "best": round(100 * r["best_ratio"]),
+                                   "last": r["last"], "last_id": r["last_id"]}
+    return render_template("index.html", tests=tests, stats=stats)
 
 
 def load_test(test_id):
