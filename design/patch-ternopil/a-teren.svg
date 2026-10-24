@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600">
+  <defs><clipPath id="c"><rect x="15" y="15" width="970" height="570" rx="60"/></clipPath></defs>
+  <g clip-path="url(#c)">
+    <rect width="1000" height="600" fill="#0057B7"/>
+    <rect y="430" width="1000" height="170" fill="#FFD500"/>
+    <!-- гілка терну -->
+    <g stroke="#3B2314" stroke-width="18" stroke-linecap="round" fill="none">
+      <path d="M60 520 C140 430 200 360 300 250"/>
+      <path d="M170 400 C150 330 160 280 190 230"/>
+      <path d="M230 330 C290 320 330 300 370 270"/>
+    </g>
+    <g stroke="#3B2314" stroke-width="10" stroke-linecap="round">
+      <line x1="120" y1="455" x2="95" y2="425"/><line x1="255" y1="300" x2="280" y2="275"/>
+    </g>
+    <!-- листя -->
+    <g fill="#2E9E44">
+      <path d="M300 250 C330 190 390 180 420 170 C400 220 360 255 300 250Z"/>
+      <path d="M190 230 C180 170 210 130 240 110 C250 160 230 205 190 230Z"/>
+      <path d="M370 270 C400 250 425 255 440 268 C410 290 390 288 370 270Z"/>
+      <path d="M140 420 C90 400 80 360 80 330 C120 345 140 380 140 420Z"/>
+    </g>
+    <!-- ягоди терну -->
+    <g fill="#3A1E6E" stroke="#FFFFFF" stroke-width="6">
+      <circle cx="215" cy="370" r="30"/><circle cx="255" cy="395" r="27"/><circle cx="225" cy="425" r="25"/>
+      <circle cx="330" cy="305" r="26"/><circle cx="160" cy="275" r="24"/>
+    </g>
+    <g fill="#FFFFFF"><circle cx="205" cy="360" r="7"/><circle cx="245" cy="386" r="6"/><circle cx="321" cy="296" r="6"/></g>
+    <!-- квіти -->
+    <g fill="#FFFFFF">
+      <g transform="translate(250 175)"><circle r="14" cx="0" cy="-18"/><circle r="14" cx="17" cy="-5"/><circle r="14" cx="10" cy="15"/><circle r="14" cx="-10" cy="15"/><circle r="14" cx="-17" cy="-5"/></g>
+      
+    </g>
+    <circle cx="250" cy="175" r="9" fill="#FFD500"/>
+    <!-- текст -->
+    <text x="715" y="285" text-anchor="middle" font-family="Inter" font-weight="900" font-size="80" fill="#FFD500" letter-spacing="2">ТЕРНОПІЛЬ</text>
+    <text x="640" y="545" text-anchor="middle" font-family="Inter" font-weight="900" font-size="84" fill="#0057B7" letter-spacing="3">04.10.2026</text>
+  </g>
+  <rect x="15" y="15" width="970" height="570" rx="60" fill="none" stroke="#E4002B" stroke-width="30"/>
+</svg>

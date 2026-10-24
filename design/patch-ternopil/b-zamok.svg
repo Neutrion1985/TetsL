@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600">
+  <defs><clipPath id="c"><rect x="15" y="15" width="970" height="570" rx="40"/></clipPath></defs>
+  <g clip-path="url(#c)">
+    <rect width="1000" height="600" fill="#FFB400"/>
+    <rect y="120" width="1000" height="110" fill="#FF7A00"/>
+    <rect y="230" width="1000" height="110" fill="#F23A29"/>
+    <!-- сонце -->
+    <circle cx="790" cy="250" r="95" fill="#FFE14D"/>
+    <!-- замок -->
+    <path fill="#16234D" d="M120 400 V250 h30 v-30 h25 v30 h25 v-30 h25 v30 h30 V400
+      h40 V300 h20 v-25 h20 v25 h20 v-25 h20 v25 h20 v-25 h20 v25 h20 V400
+      h40 V230 h30 v-30 h25 v30 h25 v-30 h25 v30 h30 V400 Z"/>
+    <path fill="#FFE14D" d="M380 400 v-55 a30 30 0 0 1 60 0 v55Z"/>
+    <rect x="172" y="300" width="26" height="40" rx="13" fill="#FFE14D"/>
+    <rect x="602" y="290" width="26" height="40" rx="13" fill="#FFE14D"/>
+    <!-- став -->
+    <rect y="400" width="1000" height="200" fill="#0057B7"/>
+    <g stroke="#FFFFFF" stroke-width="14" fill="none" stroke-linecap="round">
+      <path d="M60 430 q25 -18 50 0 t50 0 t50 0"/>
+      <path d="M640 425 q25 -18 50 0 t50 0 t50 0 t50 0"/>
+    </g>
+    <text x="500" y="103" text-anchor="middle" font-family="Inter" font-weight="900" font-size="74" fill="#16234D" letter-spacing="6">ТЕРНОПІЛЬ</text>
+    <text x="500" y="545" text-anchor="middle" font-family="Inter" font-weight="900" font-size="88" fill="#FFE14D" letter-spacing="4">04.10.2026</text>
+  </g>
+  <rect x="15" y="15" width="970" height="570" rx="40" fill="none" stroke="#16234D" stroke-width="30"/>
+</svg>
