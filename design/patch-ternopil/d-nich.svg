@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600" width="1000" height="600">
+<defs><clipPath id="c"><rect x="18" y="18" width="964" height="564" rx="70"/></clipPath></defs>
+<rect x="18" y="18" width="964" height="564" rx="70" fill="#111318"/>
+<g clip-path="url(#c)">
+ <circle cx="800" cy="150" r="62" fill="#FFD500"/><circle cx="828" cy="132" r="56" fill="#111318"/>
+ <path d="M140 98 Q140 120 162 120 Q140 120 140 142 Q140 120 118 120 Q140 120 140 98Z" fill="#FFFFFF"/><path d="M230 56 Q230 70 244 70 Q230 70 230 84 Q230 70 216 70 Q230 70 230 56Z" fill="#FFFFFF"/><path d="M560 77 Q560 95 578 95 Q560 95 560 113 Q560 95 542 95 Q560 95 560 77Z" fill="#FFFFFF"/><path d="M900 264 Q900 280 916 280 Q900 280 900 296 Q900 280 884 280 Q900 280 900 264Z" fill="#FFFFFF"/><path d="M95 218 Q95 230 107 230 Q95 230 95 242 Q95 230 83 230 Q95 230 95 218Z" fill="#FFFFFF"/><path d="M420 50 Q420 60 430 60 Q420 60 420 70 Q420 60 410 60 Q420 60 420 50Z" fill="#FFFFFF"/>
+ <path d="M250 400 V250 h30 v-30 h25 v30 h25 v-30 h25 v30 h30 V400
+ h30 V295 h20 v-25 h20 v25 h20 v-25 h20 v25 h20 v-25 h20 v25 h20 V400
+ h30 V230 h30 v-30 h25 v30 h25 v-30 h25 v30 h30 V400 Z" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linejoin="round"/>
+ <path d="M465 400 v-50 a28 28 0 0 1 56 0 v50" fill="none" stroke="#FFFFFF" stroke-width="12"/>
+ <rect x="303" y="300" width="22" height="38" rx="11" fill="#FFD500"/><rect x="668" y="285" width="22" height="38" rx="11" fill="#FFD500"/>
+ <line x1="60" y1="400" x2="940" y2="400" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"/>
+ <g stroke="#3D8BFF" stroke-width="12" fill="none" stroke-linecap="round">
+  <path d="M110 432 q30 -20 60 0 t60 0"/><path d="M400 440 q30 -20 60 0 t60 0 t60 0"/><path d="M760 432 q30 -20 60 0 t60 0"/>
+ </g>
+ <text x="500" y="528" text-anchor="middle" font-family="Inter" font-weight="900" font-size="74" fill="#FFFFFF" letter-spacing="8">ТЕРНОПІЛЬ</text>
+ <text x="500" y="168" text-anchor="middle" font-family="Inter" font-weight="900" font-size="46" fill="#FFD500" letter-spacing="10">04.10.2026</text>
+</g>
+<rect x="18" y="18" width="964" height="564" rx="70" fill="none" stroke="#FFFFFF" stroke-width="32"/>
+</svg>
